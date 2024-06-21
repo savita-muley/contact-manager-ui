@@ -68,3 +68,39 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
     - **notification-service:** Service for managing user notifications.
 - **environments**:
     - **environment.development.ts:** Development environment configuration
+
+## How the application could scale with a large number of contacts?
+
+### Backend Scalability
+
+1. **Database:**
+    - Currently the backend API is using InMemory database that is good for development purpose but not suitable for production as it cannot persist data forever.
+    - We can switch to any Relational or Non Relational database. For example, we can use MongoDB that can handle large number of records effeciently and it is more scalable wich can speed up the query performance.
+
+2. **API**
+    - Currently, the API is returning all the records available in the database and it's not good practice to follow.
+    - We can use server side pagination so that API will fetch contacts in chunks rather than all at once. To achieve this, API should accept `page` and `pageSize` from the frontend application and based on the `pageSize` it will fetch the data from database.
+    - We can user server side data filteration, that will minimize the record counts to fetch. To support this we need proper indexing in the database.
+    - We can also use caching mechanism to store frequently accessed contacts.
+
+3. **Infrastructure**
+    - In case of huge traffic, we need to deploy multiple instances of the backend API behind the load balancer to route incoming requests effeciently.
+    - To support dynamic scaling, we can utilize containerization techniques using Docker and Kubernetes for orchastration. 
+
+### Frontend Scalability
+
+1.  **Effecient Data Retrieval**
+    - Frontend application should fetch data in chunks from backend API by passing the pagination parameters `page` and `pageSize`.
+    - Frontend should provide search and filter functionality to reduce number of contacts to load.
+    - If application grows and contains multiple modules, then we can use Lazy Loading to load child modules when needed.
+    - If we start capturing contact person's photo, then we can utilize CDN to load that photo.
+
+
+## Current Design Support for Scalability
+
+1.  **Seperation of Concerns:**
+    - We have separate code base for frontend and backend application. It is a good practice as we can deploy them seperatly and scale seperatly.
+      For example, we can scale API layer horizontally to hadle more requests.
+
+2. **Cloud Support**
+    - Both Angular and .NET has good support for cloud deplyments. We can leverage cloud services like Load Balancer, CDN, Database that can further enhance the scalability.
