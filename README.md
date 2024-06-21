@@ -3,6 +3,10 @@ This is a sample application for Contact Management.
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.7.
 
+## App Demo Link
+
+[Demo](https://in.pinterest.com/pin/461337555595836411)
+
 ## Setup Instructions
 
 1. **Install Node.js**  
