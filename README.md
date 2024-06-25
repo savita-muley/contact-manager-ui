@@ -42,15 +42,19 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## Run the Application
 
-1. **Run the Backend API**
+1. **Run the JSON Server**
 
-    Start the backend API using Visual Studio or your preferred method.
+    Run the following command to start the JSON server:
+
+    ```
+    npm run server
+    ```
 
 2. **Run the Development Server**
 
     Run the following command to start the development server:
     ```
-    ng serve
+    npm run start
     ```
     Navigate to http://localhost:4200/ in your browser. The application will automatically reload if you change any of the source files.
 
@@ -72,7 +76,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
     - **notification-service:** Service for managing user notifications.
 - **environments**:
     - **environment.development.ts:** Development environment configuration
-
+- **db.json:** A local json based db file.
 ## How the application could scale with a large number of contacts?
 
 ### Backend Scalability
