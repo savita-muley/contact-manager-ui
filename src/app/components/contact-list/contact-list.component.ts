@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ApiResponse } from '../../models/api-response';
 import { ContactData } from '../../models/contact-data';
 import { ModalData } from '../../models/modal-data';
 import { ContactService } from '../../services/contact.service';
@@ -31,7 +30,7 @@ export class ContactListComponent implements OnInit {
   private getContacts() {
     this.contactService.getAllContacts().subscribe({
       next: (result: any) => {
-        this.contacts = result.data;
+        this.contacts = result;
       }
     });
   }
@@ -43,12 +42,11 @@ export class ContactListComponent implements OnInit {
 
     const subscription = this.contactEditor?.open("Create Contact").subscribe({
       next: (form: any) => {
+        form.formData.id = this.getMaxId();
         this.contactService.addContact(form.formData).subscribe({
-          next: (response: ApiResponse) => {
-            if (response.success) {
-              this.notification.success("Contact created successfully");
-              this.contacts.push(response.data);
-            }
+          next: (response: ContactData) => {
+            this.notification.success("Contact created successfully");
+            this.contacts.push(response);
           }
         });
         subscription?.unsubscribe();
@@ -59,14 +57,13 @@ export class ContactListComponent implements OnInit {
   editContact(contact: ContactData) {
     const subscription = this.contactEditor?.open("Update Contact", contact).subscribe({
       next: (form: any) => {
+        form.formData.id = contact.id;
         this.contactService.updateContact(contact.id, form.formData).subscribe({
-          next: (response: ApiResponse) => {
-            if (response.success) {
+          next: (response: ContactData) => {
+            if (response) {
               this.notification.success("Contact updated successfully");
-              if (response.data) {
-                const index = this.contacts.findIndex(c => c.id === contact.id);
-                this.contacts.splice(index, 1, response.data);
-              }
+              const index = this.contacts.findIndex(c => c.id === contact.id);
+              this.contacts.splice(index, 1, response);
             }
           }
         });
@@ -86,8 +83,9 @@ export class ContactListComponent implements OnInit {
       next: (yes: boolean) => {
         if (yes) {
           this.contactService.deleteContact(contactId).subscribe({
-            next: (response: ApiResponse) => {
-              if (response.success) {
+            next: (response: ContactData) => {
+              if (response) {
+                this.notification.success("Contact deleted successfully");
                 const index = this.contacts.findIndex(c => c.id === contactId);
                 this.contacts.splice(index, 1)
               }
@@ -97,5 +95,14 @@ export class ContactListComponent implements OnInit {
         subscription?.unsubscribe();
       }
     });
+  }
+
+  getMaxId() {
+    let id = 0;
+    if (this.contacts.length) {
+      var lastContact = this.contacts[this.contacts.length - 1];
+      id = lastContact?.id;
+    }
+    return Number(id) + 1;
   }
 }
