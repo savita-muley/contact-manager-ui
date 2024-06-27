@@ -42,13 +42,9 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## Run the Application
 
-1. **Run the JSON Server**
+1. **Run the Backend API**
 
-    Run the following command to start the JSON server:
-
-    ```
-    npm run server
-    ```
+    Start the backend API using Visual Studio or your preferred method.
 
 2. **Run the Development Server**
 
