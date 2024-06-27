@@ -5,6 +5,7 @@ import { ContactService } from '../../services/contact.service';
 import { NotificationService } from '../../services/notification.service';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 import { EditContactDialogComponent } from '../edit-contact-dialog/edit-contact-dialog.component';
+import { ApiResponse } from '../../models/api-response';
 
 @Component({
   selector: 'app-contact-list',
@@ -29,8 +30,8 @@ export class ContactListComponent implements OnInit {
 
   private getContacts() {
     this.contactService.getAllContacts().subscribe({
-      next: (result: any) => {
-        this.contacts = result;
+      next: (result: ApiResponse) => {
+        this.contacts = result.data;
       }
     });
   }
@@ -44,9 +45,9 @@ export class ContactListComponent implements OnInit {
       next: (form: any) => {
         form.formData.id = this.getMaxId();
         this.contactService.addContact(form.formData).subscribe({
-          next: (response: ContactData) => {
+          next: (response: ApiResponse) => {
             this.notification.success("Contact created successfully");
-            this.contacts.push(response);
+            this.contacts.push(response.data);
           }
         });
         subscription?.unsubscribe();
@@ -59,11 +60,11 @@ export class ContactListComponent implements OnInit {
       next: (form: any) => {
         form.formData.id = contact.id;
         this.contactService.updateContact(contact.id, form.formData).subscribe({
-          next: (response: ContactData) => {
-            if (response) {
+          next: (response: ApiResponse) => {
+            if (response.success) {
               this.notification.success("Contact updated successfully");
               const index = this.contacts.findIndex(c => c.id === contact.id);
-              this.contacts.splice(index, 1, response);
+              this.contacts.splice(index, 1, response.data);
             }
           }
         });
@@ -83,8 +84,8 @@ export class ContactListComponent implements OnInit {
       next: (yes: boolean) => {
         if (yes) {
           this.contactService.deleteContact(contactId).subscribe({
-            next: (response: ContactData) => {
-              if (response) {
+            next: (response: ApiResponse) => {
+              if (response.success) {
                 this.notification.success("Contact deleted successfully");
                 const index = this.contacts.findIndex(c => c.id === contactId);
                 this.contacts.splice(index, 1)

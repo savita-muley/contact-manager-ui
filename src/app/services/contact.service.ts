@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ContactData } from '../models/contact-data';
 import { environment } from '../../environments/environment.development';
+import { ApiResponse } from '../models/api-response';
 
 @Injectable({
   providedIn: 'root'
@@ -12,11 +13,11 @@ export class ContactService {
 
   constructor(private http: HttpClient) { }
 
-  getAllContacts(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}`);
+  getAllContacts(): Observable<ApiResponse> {
+    return this.http.get<ApiResponse>(`${this.baseUrl}`);
   }
 
-  addContact(contact: ContactData): Observable<any> {
+  addContact(contact: ContactData): Observable<ApiResponse> {
     return this.http.post<any>(`${this.baseUrl}`, contact);
   }
 
